@@ -421,7 +421,7 @@ export const Dashboard: React.FC = () => {
         // Update Mock DB Items: Remove old items, add new ones
         // 1. Remove old
         const keptItems = mockDatabase.orderItems.filter(i => i.orderId !== editingOrder.id);
-        mockDatabase.orderItems.length = 0; // Clear array
+        mockDatabase.orderItems.length = 0;
         mockDatabase.orderItems.push(...keptItems); // Restore others
 
         // 2. Add new
@@ -1316,7 +1316,7 @@ export const Dashboard: React.FC = () => {
                                 {order.status === 'DELIVERED' ? 'Ok' : order.status}
                                 </span>
                             </td>
-                            <td className="p-4 text-right font-bold text-gray-900 dark:text-white">{order.totalAmount}</td>
+                            <td className="p-4 text-right font-bold text-gray-900 dark:text-white">{order.totalAmount} MZN</td>
                             </tr>
                         ))}
                         </tbody>
@@ -1327,9 +1327,6 @@ export const Dashboard: React.FC = () => {
 
             </div>
             )}
-            
-            {/* ... other tabs would be here but omitted for brevity in this specific update as main logic is covered ... */}
-            {/* Re-injecting content from previous version for consistency */}
 
             {/* --- VIEW: ORDERS --- */}
             {activeTab === 'orders' && (
@@ -1779,9 +1776,6 @@ export const Dashboard: React.FC = () => {
 
         </main>
 
-      {/* --- NEW ORDER MODAL, ORDER DETAILS, ETC (OMITTED FOR BREVITY AS LOGIC IS UNCHANGED BUT RENDERED INSIDE MAIN FLOW) --- */}
-      {/* Re-injecting modals to ensure they work */}
-      
       {/* --- NEW ORDER MODAL --- */}
       {isNewOrderOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -2319,8 +2313,47 @@ export const Dashboard: React.FC = () => {
         </div>
       )}
 
-      {/* --- ORDER DETAILS, HISTORY MODAL ETC ALREADY ABOVE --- */}
-      {/* Ensuring they render correctly when selectedOrder or historyModalData is set */}
+      {/* --- HISTORY MODAL (FIXED: Added Back) --- */}
+      {historyModalData && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onClick={() => setHistoryModalData(null)}></div>
+          <div className="relative bg-white dark:bg-gray-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-[fade-in_0.2s_ease-out] transition-colors">
+            <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 flex justify-between items-center">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">Itens do Pedido #{historyModalData.order.id.slice(-4)}</h2>
+              <button onClick={() => setHistoryModalData(null)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                <i className="fas fa-times text-xl"></i>
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto max-h-[60vh] custom-scrollbar space-y-4">
+               {historyModalData.items.map((item, idx) => (
+                 <div key={idx} className="flex gap-4 items-start border-b border-gray-50 dark:border-gray-700 pb-4 last:border-0 last:pb-0">
+                    <div className="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden flex-shrink-0">
+                       {item.productImage ? (
+                         <img src={item.productImage} alt="" className="w-full h-full object-cover" />
+                       ) : (
+                         <div className="flex items-center justify-center h-full text-gray-400"><i className="fas fa-utensils"></i></div>
+                       )}
+                    </div>
+                    <div className="flex-1">
+                       <p className="font-bold text-gray-900 dark:text-white text-sm">{item.productName}</p>
+                       <p className="text-xs text-gray-500 dark:text-gray-400">{item.quantity}x {item.unitPrice} MZN</p>
+                       {item.notes && <p className="text-xs text-orange-500 italic mt-1">"{item.notes}"</p>}
+                    </div>
+                    <div className="font-bold text-gray-700 dark:text-gray-300 text-sm">
+                      {item.quantity * item.unitPrice} MZN
+                    </div>
+                 </div>
+               ))}
+            </div>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 text-right">
+               <p className="text-sm text-gray-500 dark:text-gray-400">Total do Pedido</p>
+               <p className="text-xl font-bold text-primary">{historyModalData.order.totalAmount} MZN</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- ORDER DETAILS --- */}
       {selectedOrder && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onClick={() => setSelectedOrder(null)}></div>
@@ -2441,7 +2474,8 @@ export const Dashboard: React.FC = () => {
         </div>
       )}
 
-    </div>
-    </div>
+      </div> {/* Closes flex-1 overflow-hidden */}
+    </div> {/* Closes min-h-screen */}
+    </div> {/* Closes dark mode wrapper */}
   );
 };
