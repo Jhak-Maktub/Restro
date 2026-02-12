@@ -2313,7 +2313,7 @@ export const Dashboard: React.FC = () => {
         </div>
       )}
 
-      {/* --- HISTORY MODAL (FIXED: Added Back) --- */}
+      {/* --- HISTORY MODAL --- */}
       {historyModalData && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onClick={() => setHistoryModalData(null)}></div>
