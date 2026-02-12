@@ -9,7 +9,7 @@ import { CTASection } from './components/CTASection';
 import { Footer } from './components/Footer';
 import { AuthModal } from './components/AuthModal';
 import { InfoModal } from './components/InfoModal';
-import { Dashboard } from './components/Dashboard';
+import Dashboard from './components/Dashboard';
 import { UpgradeSuccess } from './components/UpgradeSuccess';
 import { UpgradeCancel } from './components/UpgradeCancel';
 import { useAuth } from './context/AuthContext';
